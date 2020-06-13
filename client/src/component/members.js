@@ -8,8 +8,11 @@ class members extends React.Component{
 
                 <TableRow>
                     {/* <TableCell>{this.props.date}</TableCell> */}
-                    <TableCell>{this.props.teamname}</TableCell>
+                    <TableCell>{this.props.joinmember}</TableCell>
+                    {/* <TableCell>{this.props.teamname}</TableCell> */}
                     <TableCell>{this.props.name}</TableCell>
+                    <TableCell>{this.props.teamname}</TableCell>
+                    <TableCell>{this.props.time}</TableCell>
                 </TableRow>
 
             
