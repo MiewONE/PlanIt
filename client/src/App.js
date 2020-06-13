@@ -4,8 +4,8 @@ import React, { useState, useRef, Component } from 'react';
 import Calendar from 'react-calendar';
 import './component/calendars.css';
 import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
-import Typography  from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import { colors } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
@@ -16,9 +16,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Members from './component/members';
-const styles =theme =>({
-  root : {
-    marginTop: theme.spacing.uint * 3,
+const styles = theme => ({
+  root: {
+    // marginTop: theme.spacing.uint * 3,
+  },
+  progress: {
+    margin: theme.spacing.uint * 2
   }
 })
 // const tmember =[{
@@ -32,36 +35,44 @@ const styles =theme =>({
 class App extends Component {
   state = {
     date: new Date(),
-    tmember:""
+    tmember: "",
+    completed: 0
   };
-  componentDidMount(){
-    this.callApi()
-    .then(res => this.setState({tmember:res}))
-    .catch(err => console.log(err))
+
+  progress = () => {
+    const { completed } = this.state.completed;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 })
   }
-  callApi = async() =>{
+  componentDidMount() {
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then(res => this.setState({ tmember: res }))
+      .catch(err => console.log(err))
+  }
+  callApi = async () => {
     const response = await fetch('/api/members');
     const body = await response.json();
+    console.log(body);
     return body;
   }
   onChange = date => this.setState({ date })
   changeSelectedDate = date => {
     this.setState({ date });
   };
-  
+
   render() {
-    
+
     const cal_div = {
       width: "30%",
       display: "inline-block",
     };
     const sel_div = {
       width: "70%",
+      height: "100%",
       display: "inline-block",
-
     };
     const { classes } = this.props;
-    
+
     return (
       <div>
         <div style={cal_div}>
@@ -77,36 +88,53 @@ class App extends Component {
           <Paper elevation={3}>
             <AppBar position="static">
               <Typography className={classes.title} variant="h4" align="center" >
-              {this.state.date.getFullYear()}년
-            {this.state.date.getMonth()+1}월
+                {this.state.date.getFullYear()}년
+            {this.state.date.getMonth() + 1}월
             {this.state.date.getDate()}일
               </Typography>
-              
-            
+
+
             </AppBar>
-            
+
             예약 사항이 나오는곳입니다.<br></br>
-              {/* 이름 : {st.name}
+            {this.state.tmember.name}
+            {/* 이름 : {st.name}
               이름 : {st.id} */}
             <Table>
-                <TableHead>
+              <TableHead>
+                <TableRow>
+                  <TableCell>팀명</TableCell>
+                  <TableCell>이름</TableCell>
+                  <TableCell>참여인원</TableCell>
+                  <TableCell>활동 시간</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+
+                {this.state.tmember ? this.state.tmember.map(p => {
+                  return (
+                    <Members 
+                      dates={this.state.date.getDay()}
+                      id={p.id}
+                      name={p.NAME}
+                      teamname={p.teamName}
+                      time={p._time}
+                      joinmember={p.joinMem} />);
+                })
+                  :
                   <TableRow>
-                    <TableCell>팀명</TableCell>
-                    <TableCell>이름</TableCell>
-                    <TableCell>참여인원</TableCell>
-                    <TableCell>활동 시간</TableCell>
+                    <TableCell colSpan="6" align="center">
+                      <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
+                    </TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {this.state.tmember? this.state.tmember.map(p =>{return (<Members date={this.state.date.getDay()} id={p.id} name={p.name} teamname={p.teamname} /> );})
-                  :""}
-                  
-                  
+                }
+
+
                 {/* {this.state.customers ? this.state.customers.map(c => { return <Customer key={c.id} id={c.id} img={c.img} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job}/> }) */}
-                </TableBody>
+              </TableBody>
             </Table>
           </Paper>
-
+          {/* {this.state.tmember[0].name} */}
         </div>
         {/* <Table>
           <TableBody>
