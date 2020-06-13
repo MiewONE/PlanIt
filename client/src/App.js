@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, Component } from 'react';
 // import './component/calendars.css';
 import Calendar from 'react-calendar';
@@ -16,22 +15,15 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Members from './component/members';
+import ReservedAdd from './component/ReservedAdd';
 const styles = theme => ({
   root: {
-    // marginTop: theme.spacing.uint * 3,
+
   },
   progress: {
     margin: theme.spacing.uint * 2
   }
 })
-// const tmember =[{
-//   'id':0,
-//   'name' : '박원균',
-//   'teamname':'react'},
-//   {'id' : 1,
-//   'name' : 'test1',
-//   'teamname':'파밍'}
-// ]
 class App extends Component {
   state = {
     date: new Date(),
@@ -61,45 +53,50 @@ class App extends Component {
   };
 
   render() {
-
     const cal_div = {
-      width: "30%",
-      display: "inline-block",
+      width: "50%",
+      float:"left"
     };
     const sel_div = {
-      width: "70%",
-      height: "100%",
-      display: "inline-block",
+      width: "50%",
+      float:"left"
     };
+    const img_back = {
+
+      background:"#4B89DC",
+    }
+    const span_left={
+      float:"right",
+      right:"20px"
+    }    
     const { classes } = this.props;
 
     return (
       <div>
         <div style={cal_div}>
-          <Paper elevation={2}>
+        <div style={img_back}>
+            <img src="http://choolab.com/files/attach/images/196/nslablogo_main.png" alt="nslab"/>
+            
+          </div>
+          <Paper elevation={0}>
             <Calendar
               onChange={this.changeSelectedDate}
               value={new Date()}
             />
           </Paper>
-
+          
+          
         </div>
         <div style={sel_div}>
           <Paper elevation={3}>
             <AppBar position="static">
               <Typography className={classes.title} variant="h4" align="center" >
                 {this.state.date.getFullYear()}년
-            {this.state.date.getMonth() + 1}월
-            {this.state.date.getDate()}일
+                {" "+(this.state.date.getMonth() + 1)}월
+                {" "+this.state.date.getDate()}일
               </Typography>
-
-
             </AppBar>
-
-            예약 사항이 나오는곳입니다.<br></br>
-            {this.state.tmember.name}
-            {/* 이름 : {st.name}
-              이름 : {st.id} */}
+              예약 사항이 나오는곳입니다.<br />
             <Table>
               <TableHead>
                 <TableRow>
@@ -113,7 +110,9 @@ class App extends Component {
 
                 {this.state.tmember ? this.state.tmember.map(p => {
                   return (
-                    <Members 
+                    <Members
+                      dates={this.state.date.getFullYear()}
+                      dates={this.state.date.getMonth()}
                       dates={this.state.date.getDay()}
                       id={p.id}
                       name={p.NAME}
@@ -128,36 +127,14 @@ class App extends Component {
                     </TableCell>
                   </TableRow>
                 }
-
-
-                {/* {this.state.customers ? this.state.customers.map(c => { return <Customer key={c.id} id={c.id} img={c.img} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job}/> }) */}
               </TableBody>
             </Table>
+            <ReservedAdd/>
           </Paper>
-          {/* {this.state.tmember[0].name} */}
+
         </div>
-        {/* <Table>
-          <TableBody>
-            <TableRow>
-              <Calendar
-                onChange={this.changeSelectedDate}
-                value={new Date()}
-              />
-            </TableRow>
-            <TableRow>
-            {this.state.date.getFullYear()}
-              <Paper elevation={3}>
-                
-              </Paper>
-            </TableRow>
-
-          </TableBody>
-        </Table> */}
-
-
-
         <div>
-
+        <span style={span_left}>Made by MiewOne</span>
         </div>
       </div>
 
