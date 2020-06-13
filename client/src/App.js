@@ -21,29 +21,29 @@ const styles =theme =>({
     marginTop: theme.spacing.uint * 3,
   }
 })
-const tmember =[{
-  'id':0,
-  'name' : '박원균',
-  'teamname':'react'},
-  {'id' : 1,
-  'name' : 'test1',
-  'teamname':'파밍'}
-]
+// const tmember =[{
+//   'id':0,
+//   'name' : '박원균',
+//   'teamname':'react'},
+//   {'id' : 1,
+//   'name' : 'test1',
+//   'teamname':'파밍'}
+// ]
 class App extends Component {
   state = {
     date: new Date(),
-    num:0,
-    name:'',
-    teamname:'',
-    join_member:[{
-      name1:'',
-      name2:'',
-      name3:'',
-      name4:''
-    }],
-    bookingtime:''
+    tmember:""
   };
-
+  componentDidMount(){
+    this.callApi()
+    .then(res => this.setState({tmember:res}))
+    .catch(err => console.log(err))
+  }
+  callApi = async() =>{
+    const response = await fetch('/api/members');
+    const body = await response.json();
+    return body;
+  }
   onChange = date => this.setState({ date })
   changeSelectedDate = date => {
     this.setState({ date });
@@ -98,9 +98,8 @@ class App extends Component {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {
-                    tmember.map(p =>{return (<Members date={this.state.date.getDay()} id={p.id} name={p.name} teamname={p.teamname} /> );})
-                  }
+                  {this.state.tmember? this.state.tmember.map(p =>{return (<Members date={this.state.date.getDay()} id={p.id} name={p.name} teamname={p.teamname} /> );})
+                  :""}
                   
                   
                 {/* {this.state.customers ? this.state.customers.map(c => { return <Customer key={c.id} id={c.id} img={c.img} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job}/> }) */}
