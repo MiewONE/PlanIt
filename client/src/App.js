@@ -19,9 +19,6 @@ import ReservedAdd from './component/ReservedAdd';
 import {get,post} from 'axios';
 
 const styles = theme => ({
-  root: {
-
-  },
   progress: {
     margin: theme.spacing.uint * 2
   }
@@ -37,134 +34,65 @@ class App extends Component {
     };
   }
   stateRefresh= ()=>{
+    
     this.setState({
       tmember: "",
       completed: 0
     });
+    
+    console.log("post 이후"+this.state.date.getFullYear(),this.state.date.getMonth()+1,this.state.date.getDate());
     this.callApi()
       .then(res => this.setState({ tmember: res }))
       .catch(err => console.log(err))
   }
-  ifRefresh= ()=>{
-    this.setState({
-      tmember: "",
-      completed: 0
-    });
-    this.selectApi()
-      .then(res => this.setState({ tmember: res }))
-      .catch(err => console.log(err))
-  }
-  
+
+
   progress = () => {
     const { completed } = this.state.completed;
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 })
   }
-  componentDidMount() {
+  componentDidMount() {//렌더링하기전에 
     this.timer = setInterval(this.progress, 20);
     
-    let year = JSON.stringify(this.state.date.getFullYear());
-    let month = JSON.stringify(this.state.date.getMonth()+1);
-    let date = JSON.stringify(this.state.date.getDate());
-    console.log(year+""+month+""+date);
-    this.addReserved(year,month,date);
-    // this.ifRefresh();
-
-    this.selectApi()
-      .then(res => this.setState({ tmember: res }))
-      .catch(err => console.log(err))
+    this.stateRefresh();
+    // this.stateRefresh();
   }
-  componentDidUpdate(prevProps, prevState){
-    
-    if(prevState.date.getDate()!=this.state.date.getDate())
+  
+  componentDidUpdate(prevProps, prevState){//날짜 변수가 바뀌었을때
+
+    if((prevState.date.getDate()!=this.state.date.getDate())||
+    (prevState.date.getFullYear()!=this.state.date.getFullYear())||
+    (prevState.date.getMonth()!=this.state.date.getMonth()))
     {
       console.log("preState"+prevState.date.getDate());
       console.log("thisState"+this.state.date.getDate());
-      let year = this.state.date.getFullYear();
-      let month = this.state.date.getMonth()+1;
-      let date = this.state.date.getDate();
-      console.log(year+""+month+""+date);
-      this.addReserved(year,month,date)
-      this.ifRefresh();
+      this.stateRefresh();
     }
   }
-  // shouldComponentUpdate(nextProps, nextState){
-  //   const _year = JSON.stringify(nextState.date.getFullYear())!=this.state.date.getFullYear();
-  //   const _Month =JSON.stringify(nextState.date.getMonth())!=this.state.date.getMonth();
-  //   const _day =JSON.stringify(nextState.date.getDate())!=this.state.date.getDate();
-  //   return _year||_Month||_day;
-  //   // if(JSON.stringify(nextState.date.getDate())!=this.state.date.getDate()){
-  //   //   console.log("바뀌는것"+JSON.stringify(nextState.date.getDate()));
-  //   //   // console.log("바뀌는것"+JSON.stringify(nextState.date.getFullYear()));
-  //   //   // console.log("바뀌는것"+JSON.stringify(nextState.date.getMonth()));
-  //   //   // let year = JSON.stringify(nextState.date.getFullYear());
-  //   //   // let month = JSON.stringify(nextState.date.getMonth()+1);
-  //   //   // let date = JSON.stringify(nextState.date.getDate());
-  //   //   // // month = month <10 ? "0"+month:month;
-  //   //   // console.log("이전 값"+this.state.date.getDate());
-      
-  //   //   // // this.change_date(year,month,date);
-  //   //   // this.addReserved(year,month,date)
-  //   //   // this.ifRefresh();
-  //   //   return true;
-  //   // }else{
-
-  //   //   return false;
-  //   // }
-    
-  // }
-  // componentWillUpdate(nextProps, nextState){
-  //   let year = JSON.stringify(nextState.date.getFullYear());
-  //   let month = JSON.stringify(nextState.date.getMonth()+1);
-  //   let date = JSON.stringify(nextState.date.getDate());
-  //   console.log(year+""+month+""+date);
-  //   this.addReserved(year,month,date)
-  //   this.ifRefresh();
-  // }
 
   callApi = async () => {
-    const response = await fetch('/api/members/12');
+    const response = await fetch('/api/members');
     const body = await response.json();
-    console.log(body);
-    return body;
+    const gg = body;
+    var ts = [];
+    console.log("출력");
+    gg.map(p=>{
+      if(p._DATE == this.state.date.getFullYear()+"-0"+(this.state.date.getMonth()+1)+"-"+this.state.date.getDate())
+      {
+        
+        // console.log(p.id);
+        // console.log(p._DATE);
+        // console.log(p.NAME);
+        // console.log(p.teamName);
+        
+        ts.push({'id':p.id,_DATE:p._DATE,NAME:p.NAME,teamName:p.teamName,_time:p._time,joinMem:p.joinMem});
+      }else{
+        return "";
+      }
+    });
+    console.log(ts);
+    return ts;
   }
-  selectApi = async () => {
-    const response = await fetch('/api/members/15');
-    const body = await response.json();
-    console.log(body);
-    return body;
-  }
-
-  addReserved = (year,month,date) => {
-    const url = '/api/members/14';
-    const formData = new FormData();
-    // formData.append('TYPE','INSERT');
-    formData.append('_year',year);
-    formData.append('_month',(month));
-    formData.append('_day',date);
-    console.log("14go"+formData)
-    const config={
-        headers:{
-            'content-type' : 'multipart/form-data'
-        }
-    }
-    console.log(date);
-    return post(url,formData,config);
-}
-  // callView = async() =>{
-  //   const respose = await fetch('/api/members',{
-  //     method:'POST',
-  //     headers:{
-  //       'content-type' : 'multipart/form-data'
-  //     },
-  //     body:JSON.stringify({
-  //       'sql' : "sel"
-  //     })
-  //   }).then(res => res.json())
-  //     .catch(err => console.log(err));
-  //   const body = await response.json();
-  //   console.log(body);
-  //   return body;
-  // }
   onChange = date => this.setState({ date })
   changeSelectedDate = date => {
     this.setState({ date });
@@ -250,7 +178,7 @@ class App extends Component {
                   :
                   <TableRow>
                     <TableCell colSpan="6" align="center">
-                      <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
+                      <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} /> 
                     </TableCell>
                   </TableRow>
                 }
