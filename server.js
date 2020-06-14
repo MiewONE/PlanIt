@@ -37,7 +37,7 @@ app.get('/api/members/',(req,res)=>{
 app.post('/api/members',upload.single(),(req,res)=>{
     
     // let Type =req.body.TYPE;
-    // console.log(Type);
+    // //console.log(Type);
     // if(Type=="INSERT")
     // {
         let sql = 'INSERT INTO members VALUES (?,null,?,?,?,?,now())';
@@ -46,7 +46,7 @@ app.post('/api/members',upload.single(),(req,res)=>{
         let joinMem =req.body.joinMem;
         let teamName =req.body.teamName;
         let _time =req.body.g_time;
-        
+
 
         let params=[_DATE,NAME,joinMem,teamName,_time];
         connection.query(sql,params,
@@ -57,11 +57,11 @@ app.post('/api/members',upload.single(),(req,res)=>{
         
     //     let sql ="SELECT * FROM members WHERE _DATE = ?";
     //     let Dt = req.body.Dt;
-    //     console.log("받은거"+Dt);
+    //     //console.log("받은거"+Dt);
     //     connection.query(sql,Dt,
     //         (err,rows,fields)=>{
     //             res.send(rows);
-    //             // console.log(rows);
+    //             // //console.log(rows);
     //         });
     // }
     

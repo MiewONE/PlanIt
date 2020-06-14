@@ -40,7 +40,7 @@ class App extends Component {
       completed: 0
     });
     
-    console.log("post 이후"+this.state.date.getFullYear(),this.state.date.getMonth()+1,this.state.date.getDate());
+    //console.log("post 이후"+this.state.date.getFullYear(),this.state.date.getMonth()+1,this.state.date.getDate());
     this.callApi()
       .then(res => this.setState({ tmember: res }))
       .catch(err => console.log(err))
@@ -64,8 +64,8 @@ class App extends Component {
     (prevState.date.getFullYear()!=this.state.date.getFullYear())||
     (prevState.date.getMonth()!=this.state.date.getMonth()))
     {
-      console.log("preState"+prevState.date.getDate());
-      console.log("thisState"+this.state.date.getDate());
+      //console.log("preState"+prevState.date.getDate());
+      //console.log("thisState"+this.state.date.getDate());
       this.stateRefresh();
     }
   }
@@ -75,22 +75,22 @@ class App extends Component {
     const body = await response.json();
     const gg = body;
     var ts = [];
-    console.log("출력");
+    //console.log("출력");
     gg.map(p=>{
       if(p._DATE == this.state.date.getFullYear()+"-0"+(this.state.date.getMonth()+1)+"-"+this.state.date.getDate())
       {
         
-        // console.log(p.id);
-        // console.log(p._DATE);
-        // console.log(p.NAME);
-        // console.log(p.teamName);
+        // //console.log(p.id);
+        // //console.log(p._DATE);
+        // //console.log(p.NAME);
+        // //console.log(p.teamName);
         
         ts.push({'id':p.id,_DATE:p._DATE,NAME:p.NAME,teamName:p.teamName,_time:p._time,joinMem:p.joinMem});
       }else{
         return "";
       }
     });
-    console.log(ts);
+    //console.log(ts);
     return ts;
   }
   onChange = date => this.setState({ date })

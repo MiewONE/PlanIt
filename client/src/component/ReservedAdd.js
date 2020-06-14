@@ -23,7 +23,7 @@ class ReservedAdd extends Component{
         e.preventDefault()
         this.addReserved()
             .then((response)=>{
-                console.log(response.data);
+                //console.log(response.data);
                 this.props.stateRefresh();
             });
         this.setState=({
