@@ -16,6 +16,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Members from './component/members';
 import ReservedAdd from './component/ReservedAdd';
+import {get,post} from 'axios';
+
 const styles = theme => ({
   root: {
 
@@ -25,33 +27,149 @@ const styles = theme => ({
   }
 })
 class App extends Component {
-  state = {
-    date: new Date(),
-    tmember: "",
-    completed: 0
-  };
-
+  
+  constructor(props){
+    super(props);
+    this.state = {
+      date: new Date(),
+      tmember: "",
+      completed: 0
+    };
+  }
+  stateRefresh= ()=>{
+    this.setState({
+      tmember: "",
+      completed: 0
+    });
+    this.callApi()
+      .then(res => this.setState({ tmember: res }))
+      .catch(err => console.log(err))
+  }
+  ifRefresh= ()=>{
+    this.setState({
+      tmember: "",
+      completed: 0
+    });
+    this.selectApi()
+      .then(res => this.setState({ tmember: res }))
+      .catch(err => console.log(err))
+  }
+  
   progress = () => {
     const { completed } = this.state.completed;
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 })
   }
   componentDidMount() {
     this.timer = setInterval(this.progress, 20);
-    this.callApi()
+    
+    let year = JSON.stringify(this.state.date.getFullYear());
+    let month = JSON.stringify(this.state.date.getMonth()+1);
+    let date = JSON.stringify(this.state.date.getDate());
+    console.log(year+""+month+""+date);
+    this.addReserved(year,month,date);
+    // this.ifRefresh();
+
+    this.selectApi()
       .then(res => this.setState({ tmember: res }))
       .catch(err => console.log(err))
   }
+  componentDidUpdate(prevProps, prevState){
+    
+    if(prevState.date.getDate()!=this.state.date.getDate())
+    {
+      console.log("preState"+prevState.date.getDate());
+      console.log("thisState"+this.state.date.getDate());
+      let year = this.state.date.getFullYear();
+      let month = this.state.date.getMonth()+1;
+      let date = this.state.date.getDate();
+      console.log(year+""+month+""+date);
+      this.addReserved(year,month,date)
+      this.ifRefresh();
+    }
+  }
+  // shouldComponentUpdate(nextProps, nextState){
+  //   const _year = JSON.stringify(nextState.date.getFullYear())!=this.state.date.getFullYear();
+  //   const _Month =JSON.stringify(nextState.date.getMonth())!=this.state.date.getMonth();
+  //   const _day =JSON.stringify(nextState.date.getDate())!=this.state.date.getDate();
+  //   return _year||_Month||_day;
+  //   // if(JSON.stringify(nextState.date.getDate())!=this.state.date.getDate()){
+  //   //   console.log("바뀌는것"+JSON.stringify(nextState.date.getDate()));
+  //   //   // console.log("바뀌는것"+JSON.stringify(nextState.date.getFullYear()));
+  //   //   // console.log("바뀌는것"+JSON.stringify(nextState.date.getMonth()));
+  //   //   // let year = JSON.stringify(nextState.date.getFullYear());
+  //   //   // let month = JSON.stringify(nextState.date.getMonth()+1);
+  //   //   // let date = JSON.stringify(nextState.date.getDate());
+  //   //   // // month = month <10 ? "0"+month:month;
+  //   //   // console.log("이전 값"+this.state.date.getDate());
+      
+  //   //   // // this.change_date(year,month,date);
+  //   //   // this.addReserved(year,month,date)
+  //   //   // this.ifRefresh();
+  //   //   return true;
+  //   // }else{
+
+  //   //   return false;
+  //   // }
+    
+  // }
+  // componentWillUpdate(nextProps, nextState){
+  //   let year = JSON.stringify(nextState.date.getFullYear());
+  //   let month = JSON.stringify(nextState.date.getMonth()+1);
+  //   let date = JSON.stringify(nextState.date.getDate());
+  //   console.log(year+""+month+""+date);
+  //   this.addReserved(year,month,date)
+  //   this.ifRefresh();
+  // }
+
   callApi = async () => {
-    const response = await fetch('/api/members');
+    const response = await fetch('/api/members/12');
     const body = await response.json();
     console.log(body);
     return body;
   }
+  selectApi = async () => {
+    const response = await fetch('/api/members/15');
+    const body = await response.json();
+    console.log(body);
+    return body;
+  }
+
+  addReserved = (year,month,date) => {
+    const url = '/api/members/14';
+    const formData = new FormData();
+    // formData.append('TYPE','INSERT');
+    formData.append('_year',year);
+    formData.append('_month',(month));
+    formData.append('_day',date);
+    console.log("14go"+formData)
+    const config={
+        headers:{
+            'content-type' : 'multipart/form-data'
+        }
+    }
+    console.log(date);
+    return post(url,formData,config);
+}
+  // callView = async() =>{
+  //   const respose = await fetch('/api/members',{
+  //     method:'POST',
+  //     headers:{
+  //       'content-type' : 'multipart/form-data'
+  //     },
+  //     body:JSON.stringify({
+  //       'sql' : "sel"
+  //     })
+  //   }).then(res => res.json())
+  //     .catch(err => console.log(err));
+  //   const body = await response.json();
+  //   console.log(body);
+  //   return body;
+  // }
   onChange = date => this.setState({ date })
   changeSelectedDate = date => {
     this.setState({ date });
   };
-
+  
   render() {
     const cal_div = {
       width: "50%",
@@ -59,16 +177,17 @@ class App extends Component {
     };
     const sel_div = {
       width: "50%",
-      float:"left"
+      float:"left",
+      overflow:"auto"
     };
     const img_back = {
-
       background:"#4B89DC",
-    }
+    };
+
     const span_left={
       float:"right",
       right:"20px"
-    }    
+    } ;   
     const { classes } = this.props;
 
     return (
@@ -83,6 +202,12 @@ class App extends Component {
               onChange={this.changeSelectedDate}
               value={new Date()}
             />
+            <ReservedAdd 
+              year = {this.state.date.getFullYear()}
+              month = {this.state.date.getMonth()}
+              date = {this.state.date.getDate()}
+              stateRefresh={this.stateRefresh}
+            />
           </Paper>
           
           
@@ -90,7 +215,7 @@ class App extends Component {
         <div style={sel_div}>
           <Paper elevation={3}>
             <AppBar position="static">
-              <Typography className={classes.title} variant="h4" align="center" >
+              <Typography className={classes.title} variant="h4" align="center" height="60%" >
                 {this.state.date.getFullYear()}년
                 {" "+(this.state.date.getMonth() + 1)}월
                 {" "+this.state.date.getDate()}일
@@ -100,6 +225,7 @@ class App extends Component {
             <Table>
               <TableHead>
                 <TableRow>
+                <TableCell>신청날짜</TableCell>
                   <TableCell>팀명</TableCell>
                   <TableCell>이름</TableCell>
                   <TableCell>참여인원</TableCell>
@@ -111,10 +237,11 @@ class App extends Component {
                 {this.state.tmember ? this.state.tmember.map(p => {
                   return (
                     <Members
-                      dates={this.state.date.getFullYear()}
-                      dates={this.state.date.getMonth()}
-                      dates={this.state.date.getDay()}
+                      // Year={this.state.date.getFullYear()}
+                      // Month={this.state.date.getMonth()+1}
+                      // day={this.state.date.getDay()}
                       id={p.id}
+                      date={p._DATE}
                       name={p.NAME}
                       teamname={p.teamName}
                       time={p._time}
@@ -129,13 +256,13 @@ class App extends Component {
                 }
               </TableBody>
             </Table>
-            <ReservedAdd/>
+            
           </Paper>
 
         </div>
-        <div>
-        <span style={span_left}>Made by MiewOne</span>
-        </div>
+        <Paper elevation={3}>
+          <span style={span_left}>Made by MiewOne</span>
+        </Paper>
       </div>
 
     );

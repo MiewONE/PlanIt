@@ -25,23 +25,42 @@ const connection = mysql.createConnection({
 });
 connection.connect();
 
-app.get('/api/members',(req,res)=>{
-    let Dt = req.body.DT;
-    // let sql = "SELECT * FROM MEMBERS WHERE _DATE = ?;"
-    // let _DATE = req.body.g_DATE;
+// app.get('/api/members/12',upload.single(),(req,res)=>{
+//     console.log("12"+req)
+//     console.log('view');
+//     connection.query(
+//       "SELECT * FROM members" ,
+//       (err,rows,fields)=>{
+//           res.send(rows);
+//       }
+//     );
+// });
+app.post('/api/members/14',upload.single(),(req,res)=>{
 
-    // connection.createQuery(sql,_DATE,
-    //     (err,rows,fields) => {
-    //         res.send(rows);
-    //     });
+    // let _DATE =req.body.g_DATE;
+
+    // console.log('view14');
+    //  console.log(req);
+     let mon = req.body._month;
+     mon=mon<10?"0"+mon:mon;
+     let Dt = req.body._year +"-"+mon+"-"+req.body._day
+     console.log("14에서받음"+Dt);
+     let sql = "SELECT * FROM members where _DATE ='?'";
     connection.query(
-      "SELECT * FROM members" ,
-      (err,rows,fields)=>{
-          res.send(rows);
+       sql,Dt,(err,rows,fields)=>{
+        app.get('/api/members/15',(req,res)=>{
+            res.send(rows);
+            console.log("15에서"+rows);
+        });
+        // console.log(rows);
       }
     );
 });
 
+connection.query(sql,params,
+    (err,rows,fields)=>{
+        res.send(rows);
+    });
 // app.post('/api/members',(req,res)=>{
 //     let sql = "INSERT INTO members VALUE (?,null,?,?,?,?)";
 
@@ -65,26 +84,37 @@ app.get('/api/members',(req,res)=>{
 
 app.post('/api/members',upload.single(),(req,res)=>{
     
+    // let Type =req.body.TYPE;
+    // console.log(Type);
+    // if(Type=="INSERT")
+    // {
+        let sql = 'INSERT INTO members VALUES (?,null,?,?,?,?)';
+        let _DATE =req.body.g_DATE;
+        let NAME =req.body.NAME;
+        let joinMem =req.body.joinMem;
+        let teamName =req.body.teamName;
+        let _time =req.body.g_time;
+
+
+        let params=[_DATE,NAME,joinMem,teamName,_time];
+        connection.query(sql,params,
+            (err,rows,fields)=>{
+                res.send(rows);
+            });
+    // }else{
+        
+    //     let sql ="SELECT * FROM members WHERE _DATE = ?";
+    //     let Dt = req.body.Dt;
+    //     console.log("받은거"+Dt);
+    //     connection.query(sql,Dt,
+    //         (err,rows,fields)=>{
+    //             res.send(rows);
+    //             // console.log(rows);
+    //         });
+    // }
     
-    let sql = 'INSERT INTO members VALUES (?,null,?,?,?,?)';
-    let _DATE =req.body.g_DATE;
-    let NAME =req.body.NAME;
-    let joinMem =req.body.joinMem;
-    let teamName =req.body.teamName;
-    let _time =req.body.g_time;
-
-    console.log(_DATE);
-    console.log(NAME);
-    console.log(joinMem);
-    console.log(teamName);
-    console.log(_time);
-    console.log('외안뒈?');
-
-    let params=[_DATE,NAME,joinMem,teamName,_time];
-    connection.query(sql,params,
-        (err,rows,fields)=>{
-            res.send(rows);
-        });
+    
+    
 });
 
 
