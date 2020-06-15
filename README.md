@@ -7,12 +7,12 @@
 
 
 ## 설치필요한 모듈들
-react-scripts  - 스트립트 실행하기 
-@material-ui/core - UI 구성 라이브러리
-express - 서버와 통신하기 위해
-fs - ??
-body-parser - 통신해서 받은 값들 구분? 추후 작성
-axios - get,post로 통신
-react-calendar - 캘린더 UI
+1. react-scripts  - 스트립트 실행하기 
+2. @material-ui/core - UI 구성 라이브러리
+3. express - 서버와 통신하기 위해
+4. fs - ??
+5. body-parser - 통신해서 받은 값들 구분? 추후 작성
+6. axios - get,post로 통신
+7. react-calendar - 캘린더 UI
 
 ## DB접속오류시 계정권한 확인.
