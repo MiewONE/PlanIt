@@ -9,22 +9,22 @@
 
 
 ## 설치필요한 모듈들
-    **react-scripts**  - 스트립트 실행하기 
-    **@material-ui/core** - UI 구성 라이브러리
-    **express** - 서버와 통신하기 위해
-    **fs** - ??
-    **body-parser** - 통신해서 받은 값들 구분? 추후 작성
-    **axios** - get,post로 통신
-    **react-calendar** - 캘린더 UI
-    **nodemon** 서버구동을 위함
-    **router** 여러페이지를 보여주기위해 (npm i react-router-dom)
-    **react-font-size-changer** 폰트 사이즈 변경 (npm install --save react-font-size-changer)
+    react-scripts  - 스트립트 실행하기 
+    @material-ui/core - UI 구성 라이브러리
+    express - 서버와 통신하기 위해
+    fs - ??
+    body-parser - 통신해서 받은 값들 구분? 추후 작성
+    axios - get,post로 통신
+    react-calendar - 캘린더 UI
+    nodemon 서버구동을 위함
+    router 여러페이지를 보여주기위해 (npm i react-router-dom)
+    react-font-size-changer 폰트 사이즈 변경 (npm install --save react-font-size-changer)
  
     ec2에 옮긴후 설치해야 할것
     ============================
-    **nodejs** - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
-    **npm** -sudo apt-get install npm
-    **yarn** - sudo apt-get install yarn
+    nodejs - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+    npm -sudo apt-get install npm
+    yarn - sudo apt-get install yarn
 
     서버와 클라이언트 구동을 위한 파일이 있는곳에서
     sudo npm run (filename)을 입력해야했다.
