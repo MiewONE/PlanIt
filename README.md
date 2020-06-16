@@ -20,7 +20,7 @@
     nodemon 서버구동을 위함
     router 여러페이지를 보여주기위해 (npm i react-router-dom)
     react-font-size-changer 폰트 사이즈 변경 (npm install --save react-font-size-changer)
-
+ 
     ec2에 옮긴후 설치해야 할것
     nodejs - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
     npm -sudo apt-get install npm
