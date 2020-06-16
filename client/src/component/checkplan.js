@@ -14,14 +14,14 @@ class checkplan extends Component {
             (p) => (
                 <TableRow>
                     <TableCell>{p}</TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                    </TableRow>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>구현중입니다.</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
+                </TableRow>
             )
         );
         return(

@@ -27,7 +27,7 @@ connection.connect();
 
 app.get('/api/members/',(req,res)=>{
     connection.query(
-      "SELECT * FROM members" ,
+      "SELECT * FROM members order by _time;" ,
       (err,rows,fields)=>{
           res.send(rows);
       }
@@ -47,7 +47,12 @@ app.post('/api/members',upload.single(),(req,res)=>{
         let teamName =req.body.teamName;
         let _time =req.body.g_time;
 
-
+        if(_DATE==""||NAME==""||joinMem==""||teamName==""||_time=="")
+        {
+            console.log("empty value input");
+            return 0;
+        }
+        // if(teamName!=)
         let params=[_DATE,NAME,joinMem,teamName,_time];
         connection.query(sql,params,
             (err,rows,fields)=>{

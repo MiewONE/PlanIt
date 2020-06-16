@@ -120,9 +120,13 @@ class App extends Component {
       margin:"3px"
     }
     const { classes } = this.props;
-
+    const back_div ={
+      width:'95%',
+      height:'100%',
+      margin:'0px auto'
+    }
     return (
-      <div>
+      <div style={back_div}>
         <Router>
         <div style={cal_div}>
         <div style={img_back}>
@@ -161,13 +165,13 @@ class App extends Component {
             </AppBar>
               예약 사항이 나오는곳입니다.<br/>
               <Link to="/ViewTmember" style={{textDecoration:'none'}}>
-                <Button variant="contained" color="Black" style={w_h}>
+                <Button variant="contained" style={w_h}>
                   예약사항 형식으로보기
                 </Button>
                 {/* <Button color="primary">Primary</Button> */}
               </Link>
               <Link to="/checkplan" style={{textDecoration:'none'}}>
-                <Button variant="contained" color="Black" style={w_h}>
+                <Button variant="contained" style={w_h}>
                   시간표 형식으로 보기
                 </Button>
               </Link>
