@@ -3,20 +3,17 @@ import React, { useState, useRef, Component } from 'react';
 import Calendar from 'react-calendar';
 import './component/calendars.css';
 import Paper from '@material-ui/core/Paper';
-import CircularProgress from '@material-ui/core/CircularProgress';
+
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
-import { colors } from '@material-ui/core';
+import { colors } from '@material-ui/core'; 
 import { withStyles } from '@material-ui/core/styles';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import Members from './component/members';
+
 import ReservedAdd from './component/ReservedAdd';
-import {get,post} from 'axios';
+import { Link, Route, BrowserRouter as Router } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import checkplan from './component/checkplan';
+import ViewTmember from './component/ViewTmember';
 
 const styles = theme => ({
   progress: {
@@ -116,10 +113,17 @@ class App extends Component {
       float:"right",
       right:"20px"
     } ;   
+    const w_h ={
+      width:"200px",
+      height:"30px",
+      fontSize: '15px',
+      margin:"3px"
+    }
     const { classes } = this.props;
 
     return (
       <div>
+        <Router>
         <div style={cal_div}>
         <div style={img_back}>
             <img src="http://choolab.com/files/attach/images/196/nslablogo_main.png" alt="nslab"/>
@@ -130,12 +134,18 @@ class App extends Component {
               onChange={this.changeSelectedDate}
               value={new Date()}
             />
-            <ReservedAdd 
-              year = {this.state.date.getFullYear()}
-              month = {this.state.date.getMonth()}
-              date = {this.state.date.getDate()}
-              stateRefresh={this.stateRefresh}
-            />
+            <ReservedAdd
+                    year={this.state.date.getFullYear()}
+                    month={this.state.date.getMonth()}
+                    date={this.state.date.getDate()}
+                    stateRefresh={this.stateRefresh} />
+            {/* <Router> */}
+              
+              
+            {/* </Router> */}
+            
+            
+            
           </Paper>
           
           
@@ -149,41 +159,31 @@ class App extends Component {
                 {" "+this.state.date.getDate()}일
               </Typography>
             </AppBar>
-              예약 사항이 나오는곳입니다.<br />
-            <Table>
-              <TableHead>
-                <TableRow>
-                <TableCell>신청날짜</TableCell>
-                  <TableCell>팀명</TableCell>
-                  <TableCell>이름</TableCell>
-                  <TableCell>참여인원</TableCell>
-                  <TableCell>활동 시간</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-
-                {this.state.tmember ? this.state.tmember.map(p => {
-                  return (
-                    <Members
-                      // Year={this.state.date.getFullYear()}
-                      // Month={this.state.date.getMonth()+1}
-                      // day={this.state.date.getDay()}
-                      id={p.id}
-                      date={p._DATE}
-                      name={p.NAME}
-                      teamname={p.teamName}
-                      time={p._time}
-                      joinmember={p.joinMem} />);
-                })
-                  :
-                  <TableRow>
-                    <TableCell colSpan="6" align="center">
-                      <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} /> 
-                    </TableCell>
-                  </TableRow>
-                }
-              </TableBody>
-            </Table>
+              예약 사항이 나오는곳입니다.<br/>
+              <Link to="/ViewTmember" style={{textDecoration:'none'}}>
+                <Button variant="contained" color="Black" style={w_h}>
+                  예약사항 형식으로보기
+                </Button>
+                {/* <Button color="primary">Primary</Button> */}
+              </Link>
+              <Link to="/checkplan" style={{textDecoration:'none'}}>
+                <Button variant="contained" color="Black" style={w_h}>
+                  시간표 형식으로 보기
+                </Button>
+              </Link>
+              <br />
+              <main>
+                <Route exact path="/ViewTmember" render={() =>
+                  <ViewTmember
+                  tmember = {this.state.tmember}
+                  completed = {this.state.completed}
+                  // timer = {}
+                />
+                } />
+                <Route path="/checkplan" component={checkplan}/>
+              </main>
+              {/* import ViewTmember from './component/ViewTmember'; */}
+              
             
           </Paper>
 
@@ -191,6 +191,7 @@ class App extends Component {
         <Paper elevation={3}>
           <span style={span_left}>Made by MiewOne</span>
         </Paper>
+        </Router>
       </div>
 
     );
