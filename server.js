@@ -49,6 +49,7 @@ app.post('/api/members',upload.single(),(req,res)=>{
 
 
         let params=[_DATE,NAME,joinMem,teamName,_time];
+       
         connection.query(sql,params,
             (err,rows,fields)=>{
                 res.send(rows);

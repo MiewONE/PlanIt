@@ -16,16 +16,19 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Members from './component/members';
 import ReservedAdd from './component/ReservedAdd';
-import {get,post} from 'axios';
+import { get, post } from 'axios';
 
 const styles = theme => ({
   progress: {
     margin: theme.spacing.uint * 2
+  },
+  title :{
+    margin: theme.spacing.uint * 2
   }
 })
 class App extends Component {
-  
-  constructor(props){
+
+  constructor(props) {
     super(props);
     this.state = {
       date: new Date(),
@@ -33,37 +36,55 @@ class App extends Component {
       completed: 0
     };
   }
-  stateRefresh= ()=>{
-    
+  stateRefresh = () => {
+
     this.setState({
       tmember: "",
       completed: 0
     });
-    
+
     //console.log("post 이후"+this.state.date.getFullYear(),this.state.date.getMonth()+1,this.state.date.getDate());
     this.callApi()
       .then(res => this.setState({ tmember: res }))
       .catch(err => console.log(err))
   }
 
-
+  device_check() {
+    // 디바이스 종류 설정
+    var pc_device = "win16|win32|win64|mac|macintel";
+ 
+    // 접속한 디바이스 환경
+    var this_device = navigator.platform;
+ 
+    if ( this_device ) {
+ 
+        if ( pc_device.indexOf(navigator.platform.toLowerCase()) < 0 ) {
+            console.log('MOBILE');
+            alert("핸드폰UI는 아직 구현하지못했습니다.. ㅠㅠ ")
+        } else {
+            console.log('PC');
+        }
+ 
+    }
+  }
   progress = () => {
     const { completed } = this.state.completed;
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 })
   }
   componentDidMount() {//렌더링하기전에 
+    this.device_check();
     this.timer = setInterval(this.progress, 20);
-    
+
     this.stateRefresh();
+
     // this.stateRefresh();
   }
-  
-  componentDidUpdate(prevProps, prevState){//날짜 변수가 바뀌었을때
 
-    if((prevState.date.getDate()!=this.state.date.getDate())||
-    (prevState.date.getFullYear()!=this.state.date.getFullYear())||
-    (prevState.date.getMonth()!=this.state.date.getMonth()))
-    {
+  componentDidUpdate(prevProps, prevState) {//날짜 변수가 바뀌었을때
+
+    if ((prevState.date.getDate() != this.state.date.getDate()) ||
+      (prevState.date.getFullYear() != this.state.date.getFullYear()) ||
+      (prevState.date.getMonth() != this.state.date.getMonth())) {
       //console.log("preState"+prevState.date.getDate());
       //console.log("thisState"+this.state.date.getDate());
       this.stateRefresh();
@@ -76,17 +97,16 @@ class App extends Component {
     const gg = body;
     var ts = [];
     //console.log("출력");
-    gg.map(p=>{
-      if(p._DATE == this.state.date.getFullYear()+"-0"+(this.state.date.getMonth()+1)+"-"+this.state.date.getDate())
-      {
-        
+    gg.map(p => {
+      if (p._DATE == this.state.date.getFullYear() + "-0" + (this.state.date.getMonth() + 1) + "-" + this.state.date.getDate()) {
+
         // //console.log(p.id);
         // //console.log(p._DATE);
         // //console.log(p.NAME);
         // //console.log(p.teamName);
-        
-        ts.push({'id':p.id,_DATE:p._DATE,NAME:p.NAME,teamName:p.teamName,_time:p._time,joinMem:p.joinMem});
-      }else{
+
+        ts.push({ 'id': p.id, _DATE: p._DATE, NAME: p.NAME, teamName: p.teamName, _time: p._time, joinMem: p.joinMem });
+      } else {
         return "";
       }
     });
@@ -97,32 +117,35 @@ class App extends Component {
   changeSelectedDate = date => {
     this.setState({ date });
   };
-  
+
   render() {
     const cal_div = {
       width: "50%",
-      float:"left"
+      float: "left"
     };
     const sel_div = {
       width: "50%",
-      float:"left",
-      overflow:"auto"
+      float: "left",
+      overflow: "auto"
     };
     const img_back = {
-      background:"#4B89DC",
+      background: "#4B89DC",
     };
 
-    const span_left={
-      float:"right",
-      right:"20px"
-    } ;   
+    const span_left = {
+      float: "right",
+      right: "20px"
+    };
     const { classes } = this.props;
-
+    
+  
+  
     return (
       <div>
         <div style={cal_div}>
-        <div style={img_back}>
-            <img src="http://choolab.com/files/attach/images/196/nslablogo_main.png" alt="nslab"/>
+          <div style={img_back}>
+
+            <img src="http://choolab.com/files/attach/images/196/nslablogo_main.png" alt="nslab" style={{margin:'5px'}}/>
             
           </div>
           <Paper elevation={0}>
@@ -130,30 +153,30 @@ class App extends Component {
               onChange={this.changeSelectedDate}
               value={new Date()}
             />
-            <ReservedAdd 
-              year = {this.state.date.getFullYear()}
-              month = {this.state.date.getMonth()}
-              date = {this.state.date.getDate()}
+            <ReservedAdd
+              year={this.state.date.getFullYear()}
+              month={this.state.date.getMonth()}
+              date={this.state.date.getDate()}
               stateRefresh={this.stateRefresh}
             />
           </Paper>
-          
-          
+
+
         </div>
         <div style={sel_div}>
           <Paper elevation={3}>
             <AppBar position="static">
-              <Typography className={classes.title} variant="h4" align="center" height="60%" >
+              <Typography className={classes.title} variant="h4" align="center" >
                 {this.state.date.getFullYear()}년
-                {" "+(this.state.date.getMonth() + 1)}월
-                {" "+this.state.date.getDate()}일
+                {" " + (this.state.date.getMonth() + 1)}월
+                {" " + this.state.date.getDate()}일
               </Typography>
             </AppBar>
               예약 사항이 나오는곳입니다.<br />
             <Table>
               <TableHead>
                 <TableRow>
-                <TableCell>신청날짜</TableCell>
+                  <TableCell>신청날짜</TableCell>
                   <TableCell>팀명</TableCell>
                   <TableCell>이름</TableCell>
                   <TableCell>참여인원</TableCell>
@@ -178,17 +201,24 @@ class App extends Component {
                   :
                   <TableRow>
                     <TableCell colSpan="6" align="center">
-                      <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} /> 
+                      <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed} />
                     </TableCell>
                   </TableRow>
                 }
               </TableBody>
             </Table>
-            
+
           </Paper>
 
         </div>
         <Paper elevation={3}>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <span>코로나로 인해 랩실이 예약제로 변경되어 좀 더 접근성을 높여보자싶어 만들어봤습니다.</span><br />
+          <span>개선사항이 필요하거나 의견이 있으시면 언제든 말씀해주세요.</span><br />
           <span style={span_left}>Made by MiewOne</span>
         </Paper>
       </div>
