@@ -2,7 +2,7 @@
     "name": "plainit",
     "version": "1.0.0",
     "scripts": {
-        "client": "cd client && yarn start",
+        "client": "cd client && set PORT=80 && yarn start",
         "server": "nodemon server.js",
         "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
     },
@@ -10,12 +10,14 @@
         "body-parser": "^1.19.0",
         "bootstrap": "^4.5.0",
         "concurrently": "^5.2.0",
+        "docker": "^1.0.0",
         "express": "^4.17.1",
         "multer": "^1.4.2",
         "mysql": "^2.18.1",
         "nodemon": "^2.0.4",
         "react-bootstrap": "^1.0.1",
-        "react-calendar": "^3.1.0"
+        "react-calendar": "^3.1.0",
+        "react-router-dom": "^5.2.0"
     },
     "devDependencies": {
         "councurrently": "^4.0.1"

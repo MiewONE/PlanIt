@@ -17,15 +17,13 @@ import TableCell from '@material-ui/core/TableCell';
 import Members from './component/members';
 import ReservedAdd from './component/ReservedAdd';
 import { get, post } from 'axios';
+import { Link, Route, BrowserRouter as Router } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import checkplan from './component/checkplan';
+import ViewTmember from './component/ViewTmember';
+import Toolbar from '@material-ui/core/Toolbar';
 
-const styles = theme => ({
-  progress: {
-    margin: theme.spacing.uint * 2
-  },
-  title :{
-    margin: theme.spacing.uint * 2
-  }
-})
+
 class App extends Component {
 
   constructor(props) {
@@ -136,12 +134,32 @@ class App extends Component {
       float: "right",
       right: "20px"
     };
+
+    const useStyles = makeStyles((theme) => ({
+      progress: {
+        margin: theme.spacing.uint * 10
+      },
+      title:{
+        flexGrow: 1,
+      },
+      toolbar: {
+        minHeight: 128,
+        alignItems: 'flex-start',
+        paddingTop: theme.spacing(1),
+        paddingBottom: theme.spacing(2),
+      },
+    }));
     const { classes } = this.props;
-    
-  
+    const w_h ={
+      width:"200px",
+      height:"30px",
+      fontSize: '15px',
+      margin:"3px"
+    }
+    const classese  = useStyles;
   
     return (
-      <div>
+      <Router>
         <div style={cal_div}>
           <div style={img_back}>
 
@@ -166,13 +184,37 @@ class App extends Component {
         <div style={sel_div}>
           <Paper elevation={3}>
             <AppBar position="static">
-              <Typography className={classes.title} variant="h4" align="center" >
+            <Toolbar className={classes.toolbar}>
+              <Typography className={classese.title} variant="h4" align="center" >
                 {this.state.date.getFullYear()}년
                 {" " + (this.state.date.getMonth() + 1)}월
                 {" " + this.state.date.getDate()}일
               </Typography>
+            </Toolbar>
             </AppBar>
-              예약 사항이 나오는곳입니다.<br />
+              <Link to="/ViewTmember" style={{textDecoration:'none',margin:'3px'}}>
+                <Button variant="contained" color="Black" style={w_h}>
+                  예약사항 형식으로보기
+                </Button>
+                {/* <Button color="primary">Primary</Button> */}
+              </Link>
+              <Link to="/checkplan" style={{textDecoration:'none'}}>
+                <Button variant="contained" color="Black" style={w_h}>
+                  시간표 형식으로 보기
+                </Button>
+              </Link>
+              <br />
+              <main>
+                <Route exact path="/ViewTmember" render={() =>
+                  <ViewTmember
+                  tmember = {this.state.tmember}
+                  completed = {this.state.completed}
+                  // timer = {}
+                />
+                } />
+                <Route path="/checkplan" component={checkplan}/>
+               </main>
+              {/*예약 사항이 나오는곳입니다.<br />
             <Table>
               <TableHead>
                 <TableRow>
@@ -206,7 +248,7 @@ class App extends Component {
                   </TableRow>
                 }
               </TableBody>
-            </Table>
+            </Table> */}
 
           </Paper>
 
@@ -221,7 +263,7 @@ class App extends Component {
           <span>개선사항이 필요하거나 의견이 있으시면 언제든 말씀해주세요.</span><br />
           <span style={span_left}>Made by MiewOne</span>
         </Paper>
-      </div>
+      </Router>
 
     );
   }
@@ -229,7 +271,7 @@ class App extends Component {
 }
 
 
-export default withStyles(styles)(App);
+export default withStyles(makeStyles)(App);
 
 //constructor() - 생성자
 //componentWillMount() - 화면에 나가기 직전에 호출되는 API #이제 필요없데
